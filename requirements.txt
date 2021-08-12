@@ -1,0 +1,10 @@
+celery
+Django
+django-celery-beat
+django-celery-results
+django-filter
+djangorestframework
+drf-spectacular
+feedparser
+markdown
+psycopg2

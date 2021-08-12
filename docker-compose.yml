@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  web:
+    image: api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    command: >-
+        ./wait-for-it.sh -t 30 -s postgres:5432 --
+         python manage.py runserver 0.0.0.0:8000
+    env_file:
+      - ".env"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+    depends_on:
+      - postgres
+      - rabbitmq
+  worker:
+    image: api
+    command: >-
+        ./wait-for-it.sh -t 30 -s rabbitmq:5672 --
+        ./wait-for-it.sh -t 30 -s postgres:5432 --
+        celery -A exchange worker --loglevel INFO -Q api --concurrency=4 -n worker@%h
+    env_file:
+      - ".env"
+    depends_on:
+      - rabbitmq
+      - postgres
+      - web
+
+  postgres:
+    env_file:
+      - ".env"
+    image: postgres
+    volumes:
+      - db:/var/lib/postgresql/data
+  rabbitmq:
+    volumes:
+      - "./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    ports:
+        - 5672:5672
+        - 15672:15672
+  beat:
+    image: api
+    depends_on:
+        - web
+    command: >-
+        ./wait-for-it.sh -t 30 -s rabbitmq:5672 --
+        ./wait-for-it.sh -t 30 -s postgres:5432 --
+        celery -A exchange beat -l INFO -s /tmp/celerybeat-schedule --pidfile /tmp/celerybeat.pid
+    env_file:
+      - ".env"
+    volumes:
+      - .:/code
+
+
+volumes:
+    db:
