@@ -38,7 +38,7 @@ jobs:
         SQL_PASSWORD: dummy
         SQL_HOST: dummy
         SQL_PORT: dummy
-        SYNC_INTERVAL: dummy
+        SYNC_INTERVAL: 10
         RSS_URL_TEMPLATE: dummy
           
 
