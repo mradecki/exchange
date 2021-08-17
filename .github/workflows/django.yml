@@ -28,3 +28,18 @@ jobs:
     - name: Run Tests
       run: |
         python manage.py test
+        env:
+          SECRET_KEY: much_secret
+          CELERY_BROKER_URL: such_url
+          DJANGO_ALLOWED_HOSTS: much hosts
+          SQL_ENGINE: django.db.backends.sqlite3
+          SQL_DATABASE: db.sqlite3
+          SQL_USER=dummy
+          SQL_PASSWORD=dummy
+          SQL_HOST=dummy
+          SQL_PORT=dummy
+          CELERY_BROKER_URL=dummy
+          SYNC_INTERVAL=dummy
+          RSS_URL_TEMPLATE=dummy
+          
+
