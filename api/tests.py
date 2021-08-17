@@ -1,3 +1,4 @@
+import itertools as it
 import unittest
 from datetime import datetime
 from unittest.mock import Mock, call, patch
@@ -6,10 +7,10 @@ from urllib.error import HTTPError
 from api.models import ExchangeRate
 from api.tasks import update_rate, update_rates
 from api.utils import ExchangeRateFactory
+from django.conf import settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-import itertools as it
 
 
 class TestExchangeRate(APITestCase):
@@ -120,6 +121,7 @@ class TestTasks(unittest.TestCase):
         update_rate(currency)
 
         # THEN
+        feedparser.parse.assert_called_once_with(settings.URL_TEMPLATE.format(currency=currency))
         get_or_create.assert_has_calls(
             [
                 call(currency=currency, value=value1, date=date1),
