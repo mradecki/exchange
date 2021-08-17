@@ -5,6 +5,7 @@ django-celery-results
 django-filter
 djangorestframework
 drf-spectacular
+factory_boy
 feedparser
 markdown
 psycopg2

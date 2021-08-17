@@ -37,5 +37,5 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
-    re_path("^api/rates/$", views.ExchangeRateHistoryView.as_view()),
+    re_path("^api/rates/$", views.ExchangeRateHistoryView.as_view(), name='rate-list'),
 ]
